@@ -1,0 +1,4 @@
+# zookeeper configuration dropped off by Chef!
+<% node[:zookeeperd][:config].each do |key,value| -%>
+<%= ChefZookeeperd.config_format(key, value) %>
+<% end %>

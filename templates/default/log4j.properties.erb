@@ -1,0 +1,4 @@
+# log4j property file dropped off by Chef!
+<% node[:zookeeperd][:log4j].each do |k,v| %>
+log4j.<%= k %>=<%= v %>
+<% end %>
