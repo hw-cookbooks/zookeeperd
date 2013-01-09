@@ -2,7 +2,14 @@
 
 Install and configure zookeeper.
 
-### Important Attributes
+## Client
+
+* `recipe[zookeeperd::client]`
+
+## Server
+
+* `recipe[zookeeperd::server]`
 
 ### Infos:
 * Repository: https://github.com/hw-cookbooks/zookeeperd
+* IRC: Freenode @ #heavywater
