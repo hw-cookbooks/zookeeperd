@@ -16,11 +16,14 @@ end
 
 # TODO: This is one big race condition
 unless(node[:zookeeperd][:zk_id])
-  zk_search = 'zk_id:*'
-  if(node[:zookeeperd][:common_environment])
-    zk_search << " AND chef_environment:#{node.chef_environment}"
-  end
-  cur_id = search(:node, zk_search).map{|zk_node|
+  zk_nodes = discovery_all(
+    'zk_id:*', 
+    :environment_aware => node[:zookeeperd][:cluster][:common_environment],
+    :empty_ok => true,
+    :minimum_response_time => false,
+    :remove_self => false
+  )
+  cur_id = zk_nodes.map{|zk_node|
     zk_node[:zookeeperd][:zk_id].to_i
   }.max.to_i
   node.set[:zookeeperd][:zk_id] = cur_id + 1
