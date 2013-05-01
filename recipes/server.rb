@@ -14,7 +14,8 @@ template '/etc/zookeeper/conf/zoo.cfg' do
   notifies :restart, 'service[zookeeper]'
 end
 
-# TODO: This is one big race condition
+node.default[:zookeeperd][:zk_id] = %x{hostid}.to_16
+
 unless(node[:zookeeperd][:zk_id])
   zk_nodes = discovery_all(
     'zk_id:*', 
