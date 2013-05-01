@@ -2,7 +2,7 @@ zk_nodes = discovery_all(
   'zk_id:*', 
   :environment_aware => node[:zookeeperd][:cluster][:common_environment],
   :empty_ok => true,
-  :minimum_response_time => false,
+  :minimum_response_time_sec => false,
   :remove_self => false
 )
 
@@ -17,4 +17,4 @@ end
 unless(zk_hash.has_key?("server.#{node[:zookeeperd][:zk_id]}"))
   zk_hash["server.#{node[:zookeeperd][:zk_id]}"] = "#{node[:ipaddress]}:#{node[:zookeeperd][:cluster][:follower_port]}:#{node[:zookeeperd][:cluster][:election_port]}"
 end
-node.default[:zookeeperd][:config] = zk_hash
+node.set[:zookeeperd][:config] = zk_hash
