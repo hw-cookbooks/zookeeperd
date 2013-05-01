@@ -3,7 +3,8 @@ zk_nodes = discovery_all(
   :environment_aware => node[:zookeeperd][:cluster][:common_environment],
   :empty_ok => true,
   :minimum_response_time_sec => false,
-  :remove_self => false
+  :remove_self => false,
+  :raw_search => true
 )
 
 zk_hash = {}

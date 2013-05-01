@@ -1,5 +1,7 @@
 include_recipe 'zookeeperd::client'
 
+node.default[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
+
 if(node[:zookeeperd][:cluster][:auto_discovery])
   include_recipe 'zookeeperd::discovery'
 end
@@ -13,8 +15,6 @@ template '/etc/zookeeper/conf/zoo.cfg' do
   mode 0644
   notifies :restart, 'service[zookeeper]'
 end
-
-node.default[:zookeeperd][:zk_id] = %x{hostid}.to_16
 
 unless(node[:zookeeperd][:zk_id])
   zk_nodes = discovery_all(
