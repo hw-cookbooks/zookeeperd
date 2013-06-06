@@ -1,6 +1,13 @@
 include_recipe 'zookeeperd::client'
 
-node.default[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
+unless(node[:zookeeperd][:zk_id])
+  if(node[:zookeeperd][:auto_id].to_s == 'rand')
+    max_uint = 2**(%w(a).pack('p').size * 8) - 1
+    node.set[:zookeeperd][:zk_id] = rand(max_uint)
+  else
+    node.set[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
+  end
+end
 
 if(node[:zookeeperd][:cluster][:auto_discovery])
   include_recipe 'zookeeperd::discovery'
