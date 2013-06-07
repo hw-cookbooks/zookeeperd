@@ -53,3 +53,6 @@ end
 service 'zookeeper' do
   action :start
 end
+
+# mark as a zk node
+node.set[:zookeeperd_server] = true

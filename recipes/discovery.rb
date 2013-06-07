@@ -1,5 +1,5 @@
 zk_nodes = discovery_all(
-  'zk_id:* AND recipes:zookeeperd\:\:server', 
+  'zk_id:* AND zookeeperd_server:true', 
   :environment_aware => node[:zookeeperd][:cluster][:common_environment],
   :empty_ok => true,
   :minimum_response_time_sec => false,
@@ -27,6 +27,14 @@ if(node[:zookeeperd][:zk_id])
   end
 end
 
+current_set = node[:zookeeperd][:config].map do |k,v|
+  k if k.start_with?('server.')
+end
+
 zk_hash.each do |k,v|
   node.set[:zookeeperd][:config][k] = v
+end
+
+(current_set - zk_hash.keys).each do |stale_key|
+  node.set[:zookeeperd][:config].delete(stale_key)
 end
