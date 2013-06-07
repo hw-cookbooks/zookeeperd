@@ -8,7 +8,7 @@ zk_nodes = discovery_all(
 )
 
 zk_hash = {}
-zk_nodes.push(node) if node[:zookeeperd][:zk_id]
+zk_nodes.push(node) unless node[:zookeeperd][:zk_id].to_s.strip.empty?
 
 zk_nodes.each do |znode|
   zinfo = [znode[:zookeeperd][:ipaddress]]
