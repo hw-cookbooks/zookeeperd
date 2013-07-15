@@ -2,7 +2,8 @@ include_recipe 'zookeeperd::client'
 
 unless(node[:zookeeperd][:zk_id])
   if(node[:zookeeperd][:auto_id].to_s == 'rand')
-    max_uint = 2**(%w(a).pack('p').size * 8) - 1
+    factor = node[:zookerperd][:int_limit]/8
+    max_uint = 2**(%w(a).pack('p').size * factor) - 1
     node.set[:zookeeperd][:zk_id] = rand(max_uint)
   else
     node.set[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
