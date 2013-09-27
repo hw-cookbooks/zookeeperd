@@ -1,12 +1,13 @@
 include_recipe 'zookeeperd::client'
 
 unless(node[:zookeeperd][:zk_id])
-  if(node[:zookeeperd][:auto_id].to_s == 'rand')
-    factor = node[:zookeeperd][:int_bit_limit]/8
-    max_uint = 2**(%w(a).pack('p').size * factor) - 1
-    node.set[:zookeeperd][:zk_id] = rand(max_uint)
-  else
+  factor = node[:zookeeperd][:int_bit_limit]/8
+  max_uint = 2**(%w(a).pack('p').size * factor) - 1
+  if(node[:zookeeperd][:auto_id].to_s != 'rand')
     node.set[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
+  end
+  if(node[:zookeeperd][:zk_id].nil? || node[:zookeeperd][:zk_id] > max_uint)
+    node.set[:zookeeperd][:zk_id] = rand(max_uint)
   end
 end
 
@@ -26,7 +27,7 @@ end
 
 unless(node[:zookeeperd][:zk_id])
   zk_nodes = discovery_all(
-    'zk_id:*', 
+    'zk_id:*',
     :environment_aware => node[:zookeeperd][:cluster][:common_environment],
     :empty_ok => true,
     :minimum_response_time => false,
