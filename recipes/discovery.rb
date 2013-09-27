@@ -1,5 +1,12 @@
+discover_query = [
+  'zk_id:*',
+  'zookeeperd_server:true'
+]
+
+discover_query += Array(node[:zookeeperd][:cluster][:discovery_query]).flatten.compact
+
 zk_nodes = discovery_all(
-  'zk_id:* AND zookeeperd_server:true', 
+  discover_query.join(' AND '),
   :environment_aware => node[:zookeeperd][:cluster][:common_environment],
   :empty_ok => true,
   :minimum_response_time_sec => false,
