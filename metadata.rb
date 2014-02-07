@@ -6,4 +6,5 @@ name 'zookeeperd'
 version '0.1.5'
 
 depends 'discovery', '>= 0.2.0'
+depends 'java'
 depends 'yum'

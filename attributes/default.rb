@@ -13,3 +13,6 @@ default[:zookeeperd][:zk_id] = nil
 default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
+
+#default[:java][:install_flavor] = "openjdk"
+#default[:java][:jdk_version] = "6"
