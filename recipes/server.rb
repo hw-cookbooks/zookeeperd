@@ -16,7 +16,27 @@ if(node[:zookeeperd][:cluster][:auto_discovery])
 end
 
 node[:zookeeperd][:server_packages].each do |zkpkg|
-  package zkpkg
+  package zkpkg do
+    action :install
+    notifies :run, 'execute[zk_init]', :immediately
+  end
+end
+
+if ["redhat", "centos", "scientific", "suse"].include?(node["platform"])
+  execute 'zk_init' do
+    command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
+    action :nothing
+  end
+end
+
+service 'zookeeper' do
+  case node['platform_family']
+  when 'rhel','fedora','suse'
+    service_name 'zookeeper-server'
+  when 'debian'
+    service_name 'zookeeper'
+  end
+  action :enable
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
