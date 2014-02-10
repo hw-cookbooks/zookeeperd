@@ -1,5 +1,4 @@
-case node['platform_family']
-when 'rhel', 'fedora', 'suse'
+if(node.platform_family?('rhel', 'fedora', 'suse'))
   include_recipe 'java'
 end
 
@@ -24,14 +23,13 @@ node[:zookeeperd][:server_packages].each do |zkpkg|
   package zkpkg
 end
 
-if ["redhat", "centos", "scientific", "suse"].include?(node["platform"])
-  execute 'zk_init' do
-    command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
-    action :nothing
-    node[:zookeeperd][:server_packages].each do |zkpkg|
-      subscribes :run, "package[#{zkpkg}]", :immediately
-    end
+execute 'zk_init' do
+  command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
+  action :nothing
+  node[:zookeeperd][:server_packages].each do |zkpkg|
+    subscribes :run, "package[#{zkpkg}]", :immediately
   end
+  only_if { node.platform_family?('rhel', 'fedora', 'suse') }
 end
 
 service 'zookeeper' do
