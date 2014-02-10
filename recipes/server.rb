@@ -33,13 +33,8 @@ execute 'zk_init' do
 end
 
 service 'zookeeper' do
-  case node['platform_family']
-  when 'rhel','fedora','suse'
-    service_name 'zookeeper-server'
-  when 'debian'
-    service_name 'zookeeper'
-  end
-  action :nothing
+  service_name node[:zookeeperd][:service_name]
+  action :enable
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
