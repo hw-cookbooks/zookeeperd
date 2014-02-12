@@ -5,6 +5,7 @@ license 'Apache 2.0'
 name 'zookeeperd'
 version '0.1.4'
 
+depends 'apt'
 depends 'discovery', '>= 0.2.0'
 depends 'java'
 depends 'yum'
