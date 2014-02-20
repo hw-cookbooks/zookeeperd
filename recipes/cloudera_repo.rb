@@ -1,17 +1,17 @@
 yum_repository 'cloudera-cdh4' do
   description   "Cloudera's Distribution for Hadoop, Version 4"
-  baseurl       "http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/4/"
-  gpgkey        'http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera'
+  baseurl       node[:zookeeperd][:cloudera][:baseurl]
+  gpgkey        node[:zookeeperd][:cloudera][:gpgkey]
   action        :create
   only_if { node.platform_family?('rhel', 'fedora', 'suse') }
 end
 
 apt_repository 'cloudera' do
-  uri          'http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh'
+  uri          node[:zookeeperd][:cloudera][:uri]
   arch         'amd64'
   distribution 'precise-cdh4'
   components   ['contrib']
-  key          'http://archive.cloudera.com/debian/archive.key'
+  key          node[:zookeeperd][:cloudera][:key]
   only_if { node.platform_family?('debian') }
 end
 

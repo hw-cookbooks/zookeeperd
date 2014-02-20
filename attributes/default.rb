@@ -13,3 +13,8 @@ default[:zookeeperd][:zk_id] = nil
 default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
+
+default[:zookeeperd][:cloudera][:baseurl] = "http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/4/"
+default[:zookeeperd][:cloudera][:gpgkey] = "http://archive.cloudera.com/cdh4/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera"
+default[:zookeeperd][:cloudera][:uri] = "http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh"
+default[:zookeeperd][:cloudera][:key] = "http://archive.cloudera.com/debian/archive.key"
