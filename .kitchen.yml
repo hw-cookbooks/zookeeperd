@@ -9,10 +9,15 @@ platforms:
   - name: ubuntu-12.04
     run_list:
       - recipe[apt]
-  - name: centos-6.4
 
 suites:
-  - name: default
+  - name: client
     run_list:
       - recipe[zookeeperd]
+  - name: server
+    run_list:
+      - recipe[zookeeperd::server]
     attributes:
+      zookeeperd:
+        config:
+          client_port: 9000
