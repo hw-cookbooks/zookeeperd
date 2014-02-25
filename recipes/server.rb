@@ -1,3 +1,8 @@
+if(node[:zookeeperd][:cloudera_repo] == true)
+  include_recipe 'java'
+  include_recipe 'zookeeperd::cloudera_repo'
+end
+
 include_recipe 'zookeeperd::client'
 
 unless(node[:zookeeperd][:zk_id])
@@ -17,6 +22,20 @@ end
 
 node[:zookeeperd][:server_packages].each do |zkpkg|
   package zkpkg
+end
+
+execute 'zk_init' do
+  command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
+  action :nothing
+  node[:zookeeperd][:server_packages].each do |zkpkg|
+    subscribes :run, "package[#{zkpkg}]", :immediately
+  end
+  only_if { node[:zookeeperd][:cloudera_repo] == true }
+end
+
+service 'zookeeper' do
+  service_name node[:zookeeperd][:service_name]
+  action :enable
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
