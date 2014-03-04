@@ -3,5 +3,6 @@
 
 site 'http://community.opscode.com/api/v1'
 
+cooknook 'chef-solo-search'
 cookbook 'zookeeperd', path: '.'
 cookbook 'apt'

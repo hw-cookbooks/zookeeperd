@@ -17,10 +17,10 @@ provisioner = {
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.provision :shell, :inline => $install_chef
-
   config.vm.define "centos" do |centos|
-    centos.vm.box = "Centos-6.4-x86_64"
+    centos.vm.provision :shell, :inline => $install_chef
+    centos.vm.box ="opscode_centos-6.5_chef-provisionerless"
+    centos.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
     centos.vm.provider "virtualbox" do |v|
       v.memory = 256
     end
@@ -43,10 +43,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.provision :shell, :inline => $install_chef
-
   config.vm.define "ubuntu" do |ubuntu|
-    ubuntu.vm.box = "ubuntu-12.04-x86_64"
+    ubuntu.vm.provision :shell, :inline => "sudo apt-get intsall curl -y"
+    ubuntu.vm.provision :shell, :inline => $install_chef
+    ubuntu.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box"
+    ubuntu.vm.box = "opscode_ubuntu-12.04_chef-provisionerless"
     ubuntu.vm.provider "virtualbox" do |v|
       v.memory = 256
     end

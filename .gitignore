@@ -4,4 +4,6 @@
 Gemfile.lock
 Cheffile.lock
 .librarian/
-tmp/
+cookbooks
+tmp
+.vagrant
