@@ -1,1 +1,6 @@
 *.swp
+cookbooks
+tmp
+.vagrant
+Cheffile.lock
+Gemfile.lock
