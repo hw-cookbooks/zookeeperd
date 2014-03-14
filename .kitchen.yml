@@ -6,6 +6,12 @@ driver:
 
 provisioner:
   name: chef_solo
+  attributes:
+    zookeeperd:
+      cluster:
+        auto_discovery: false
+      config:
+        client_port: 9000
 
 platforms:
   - name: ubuntu-12.04
@@ -20,12 +26,6 @@ suites:
   - name: server
     run_list:
       - recipe[zookeeperd::server]
-    attributes:
-      zookeeperd:
-        cluster:
-          auto_discovery: false
-        config:
-          client_port: 9000
   - name: server-cloudera
     includes:
       - ubuntu-12.04
@@ -33,8 +33,19 @@ suites:
       - recipe[zookeeperd::server]
     attributes:
       zookeeperd:
-        cluster:
-          auto_discovery: false
-        config:
-          client_port: 9000
         cloudera_repo: true
+  - name: server-runit
+    run_list:
+      - recipe[zookeeperd::server]
+    attributes:
+      zookeeperd:
+        service: runit
+  - name: server-cloudera-runit
+    includes:
+      - ubuntu-12.04
+    run_list:
+      - recipe[zookeeperd::server]
+    attributes:
+      zookeeperd:
+        cloudera_repo: true
+        service: runit

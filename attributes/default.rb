@@ -18,3 +18,4 @@ default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
 
+default[:zookeeperd][:service] = 'default'

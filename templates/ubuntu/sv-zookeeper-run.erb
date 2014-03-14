@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/zookeeper/conf/environment
+. /etc/default/zookeeper
+
+cd <%= node[:zookeeperd][:config][:data_dir] %>
+exec 2>&1
+exec chpst \
+  -u <%= node[:zookeeperd][:user] %> \
+  $JAVA \
+  -cp $CLASSPATH $JAVA_OPTS \
+  -Dzookeeper.log.dir=${ZOO_LOG_DIR} \
+  -Dzookeeper.root.logger=${ZOO_LOG4J_PROP} \
+  $ZOOMAIN $ZOOCFG
