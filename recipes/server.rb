@@ -24,12 +24,14 @@ node[:zookeeperd][:server_packages].each do |zkpkg|
   package zkpkg
 end
 
+last_package = Array(node[:zookeeperd][:server_packages]).last
+
 execute 'zk_init' do
-  command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
+  command "/usr/bin/zookeeper-server-initialize"
+  user "zookeeper"
+  group "zookeeper"
+  subscribes :run, "package[#{last_package}]", :immediately if last_package
   action :nothing
-  node[:zookeeperd][:server_packages].each do |zkpkg|
-    subscribes :run, "package[#{zkpkg}]", :immediately
-  end
   only_if { node[:zookeeperd][:cloudera_repo] == true }
 end
 
