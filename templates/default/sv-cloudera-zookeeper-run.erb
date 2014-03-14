@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Using implementation similar to /usr/bin/zookeeper-server to avoid
+# an extra child process
+
+. /usr/lib/bigtop-utils/bigtop-detect-javahome
+
+export ZOOPIDFILE=${ZOOPIDFILE:-/var/run/zookeeper/zookeeper-server.pid}
+export ZOOKEEPER_HOME=${ZOOKEEPER_CONF:-/usr/lib/zookeeper}
+export ZOOKEEPER_CONF=${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
+export ZOOCFGDIR=${ZOOCFGDIR:-$ZOOKEEPER_CONF}
+export CLASSPATH=$CLASSPATH:$ZOOKEEPER_CONF:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*
+export ZOO_LOG_DIR=${ZOO_LOG_DIR:-/var/log/zookeeper}
+export ZOO_LOG4J_PROP=${ZOO_LOG4J_PROP:-INFO,ROLLINGFILE}
+export JVMFLAGS=${JVMFLAGS:--Dzookeeper.log.threshold=INFO}
+export ZOO_DATADIR_AUTOCREATE_DISABLE=${ZOO_DATADIR_AUTOCREATE_DISABLE:-true}
+
+exec 2>&1
+exec chpst \
+  -u <%= node[:zookeeperd][:user] %> \
+  /usr/lib/zookeeper/bin/zkServer.sh start-foreground

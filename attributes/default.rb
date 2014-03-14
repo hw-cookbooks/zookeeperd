@@ -21,3 +21,5 @@ default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
 default[:zookeeperd][:user] = "zookeeper"
 default[:zookeeperd][:group] = "zookeeper"
+
+default[:zookeeperd][:init] = 'default'
