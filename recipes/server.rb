@@ -35,11 +35,6 @@ execute 'zk_init' do
   only_if { node[:zookeeperd][:cloudera_repo] == true }
 end
 
-service 'zookeeper' do
-  service_name node[:zookeeperd][:service_name]
-  action :enable
-end
-
 template '/etc/zookeeper/conf/zoo.cfg' do
   source 'zoo.cfg.erb'
   mode 0644
@@ -74,7 +69,8 @@ template '/etc/zookeeper/conf/log4j.properties' do
 end
 
 service 'zookeeper' do
-  action :start
+  service_name node[:zookeeperd][:service_name]
+  action [:enable, :start]
 end
 
 # mark as a zk node
