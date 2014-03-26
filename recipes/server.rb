@@ -1,4 +1,6 @@
-if(node[:zookeeperd][:cloudera_repo] == true)
+cloudera = node[:zookeeperd][:cloudera_repo]
+
+if cloudera
   include_recipe 'java'
   include_recipe 'zookeeperd::cloudera_repo'
 end
@@ -24,15 +26,11 @@ node[:zookeeperd][:server_packages].each do |zkpkg|
   package zkpkg
 end
 
-last_package = Array(node[:zookeeperd][:server_packages]).last
-
 execute 'zk_init' do
   command "/usr/bin/zookeeper-server-initialize"
   user "zookeeper"
   group "zookeeper"
-  subscribes :run, "package[#{last_package}]", :immediately if last_package
-  action :nothing
-  only_if { node[:zookeeperd][:cloudera_repo] == true }
+  only_if { cloudera && !::File.directory?("/var/lib/zookeeper/version-2") }
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
