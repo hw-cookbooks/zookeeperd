@@ -71,5 +71,6 @@ service 'zookeeper' do
   action [:enable, :start]
 end
 
-# mark as a zk node
-node.set[:zookeeperd_server] = true
+ruby_block 'mark as a zookeeper node' do
+  block { node.set[:zookeeperd_server] = true }
+end
