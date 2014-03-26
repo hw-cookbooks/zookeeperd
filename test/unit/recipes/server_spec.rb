@@ -73,10 +73,7 @@ describe "zookeeperd::server" do
     end
 
     it "marks the node as a zookeeper node" do
-      node.set[:zookeeperd_server] = false
-      chef_run
-
-      expect(node[:zookeeperd_server]).to be_true
+      expect(chef_run).to run_ruby_block("mark as a zookeeper node")
     end
   end
 
@@ -98,13 +95,6 @@ describe "zookeeperd::server" do
       expect(resource.command).to eq("/usr/bin/zookeeper-server-initialize")
       expect(resource.user).to eq("zookeeper")
       expect(resource.group).to eq("zookeeper")
-    end
-
-    it "subscribes zk_init to the last server package's installation" do
-      node.set[:zookeeperd][:server_packages] = %w{firsta lasta}
-      resource = chef_run.execute("zk_init")
-
-      expect(resource).to subscribe_to("package[lasta]")
     end
   end
 
