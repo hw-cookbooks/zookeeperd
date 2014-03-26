@@ -7,18 +7,18 @@ end
 
 include_recipe 'zookeeperd::client'
 
-unless(node[:zookeeperd][:zk_id])
+unless node[:zookeeperd][:zk_id]
   factor = node[:zookeeperd][:int_bit_limit]/8
   max_uint = 2**(%w(a).pack('p').size * factor) - 1
-  if(node[:zookeeperd][:auto_id].to_s != 'rand')
+  if node[:zookeeperd][:auto_id].to_s != 'rand'
     node.set[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
   end
-  if(node[:zookeeperd][:zk_id].nil? || node[:zookeeperd][:zk_id] > max_uint)
+  if node[:zookeeperd][:zk_id].nil? || node[:zookeeperd][:zk_id] > max_uint
     node.set[:zookeeperd][:zk_id] = rand(max_uint)
   end
 end
 
-if(node[:zookeeperd][:cluster][:auto_discovery])
+if node[:zookeeperd][:cluster][:auto_discovery]
   include_recipe 'zookeeperd::discovery'
 end
 
