@@ -22,7 +22,7 @@ if node[:zookeeperd][:cluster][:auto_discovery]
   include_recipe 'zookeeperd::discovery'
 end
 
-node[:zookeeperd][:server_packages].each do |zkpkg|
+Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
   package zkpkg
 end
 
