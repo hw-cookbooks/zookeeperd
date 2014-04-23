@@ -28,9 +28,17 @@ end
 
 execute 'zk_init' do
   command "/usr/bin/zookeeper-server-initialize"
-  user "zookeeper"
-  group "zookeeper"
-  only_if { cloudera && !::File.directory?("/var/lib/zookeeper/version-2") }
+  user node[:zookeeperd][:user]
+  group node[:zookeeperd][:group]
+  only_if do
+    cloudera &&
+      !::File.directory?(
+        File.join(
+          node[:zookeeperd][:config][:data_dir],
+          node[:zookeeperd][:cloudera][:init_dir_name]
+        )
+      )
+  end
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
