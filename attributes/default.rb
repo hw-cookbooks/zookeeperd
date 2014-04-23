@@ -19,7 +19,8 @@ default[:zookeeperd][:zk_id] = nil
 default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
-default[:zookeeperd][:user] = "zookeeper"
-default[:zookeeperd][:group] = "zookeeper"
 
 default[:zookeeperd][:init] = 'default'
+
+default[:zookeeperd][:user] = "zookeeper"
+default[:zookeeperd][:group] = "zookeeper"
