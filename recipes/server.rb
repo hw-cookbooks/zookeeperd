@@ -76,7 +76,7 @@ template '/etc/zookeeper/conf/log4j.properties' do
   notifies :restart, 'service[zookeeper]'
 end
 
-if node[:zookeeperd][:service].to_s == 'runit'
+if node[:zookeeperd][:init].to_s == 'runit'
   include_recipe 'zookeeperd::runit'
 end
 
