@@ -82,7 +82,7 @@ end
 
 service 'zookeeper' do
   service_name node[:zookeeperd][:service_name]
-  action [:enable, :start]
+  action node[:zookeeperd][:init].to_s == 'runit' ? :start : [:enable, :start]
 end
 
 ruby_block 'mark as a zookeeper node' do

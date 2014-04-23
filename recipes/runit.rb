@@ -26,10 +26,6 @@ elsif platform_family?("debian")
   end
 end
 
-ruby_block "remove :enable action from service[zookeeper]" do
-  block { resources("service[zookeeper]").action([:start]) }
-end
-
 directory "/var/run/zookeeper" do
   owner node[:zookeeperd][:user]
 end
