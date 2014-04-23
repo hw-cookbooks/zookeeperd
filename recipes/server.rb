@@ -5,6 +5,8 @@ if cloudera
   include_recipe 'zookeeperd::cloudera_repo'
 end
 
+log "zookeeperd pre-package hook"
+
 include_recipe 'zookeeperd::client'
 
 unless node[:zookeeperd][:zk_id]
@@ -74,9 +76,13 @@ template '/etc/zookeeper/conf/log4j.properties' do
   notifies :restart, 'service[zookeeper]'
 end
 
+if node[:zookeeperd][:init].to_s == 'runit'
+  include_recipe 'zookeeperd::runit'
+end
+
 service 'zookeeper' do
   service_name node[:zookeeperd][:service_name]
-  action [:enable, :start]
+  action node[:zookeeperd][:init].to_s == 'runit' ? :start : [:enable, :start]
 end
 
 ruby_block 'mark as a zookeeper node' do

@@ -15,9 +15,13 @@ end
 
 default[:zookeeperd][:cloudera][:init_dir_name] = "version-2"
 
+# defaults to package default init unless set to runit
+default[:zookeeperd][:init] = 'init'
+
 default[:zookeeperd][:zk_id] = nil
 default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
+
 default[:zookeeperd][:user] = "zookeeper"
 default[:zookeeperd][:group] = "zookeeper"
