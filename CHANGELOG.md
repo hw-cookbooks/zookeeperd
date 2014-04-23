@@ -1,3 +1,7 @@
+## v0.2.0
+* Add tests
+* Include support for runit
+
 ## v0.1.6
 * Adds support for RHEL platform (thanks @ianrossi!)
 * Adds base test kitchen support
