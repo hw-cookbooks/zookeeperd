@@ -1,41 +1,44 @@
-if(node[:zookeeperd][:cloudera_repo] == true)
+cloudera = node[:zookeeperd][:cloudera_repo]
+
+if cloudera
   include_recipe 'java'
   include_recipe 'zookeeperd::cloudera_repo'
 end
 
 include_recipe 'zookeeperd::client'
 
-unless(node[:zookeeperd][:zk_id])
+unless node[:zookeeperd][:zk_id]
   factor = node[:zookeeperd][:int_bit_limit]/8
   max_uint = 2**(%w(a).pack('p').size * factor) - 1
-  if(node[:zookeeperd][:auto_id].to_s != 'rand')
+  if node[:zookeeperd][:auto_id].to_s != 'rand'
     node.set[:zookeeperd][:zk_id] = %x{hostid}.to_i(16)
   end
-  if(node[:zookeeperd][:zk_id].nil? || node[:zookeeperd][:zk_id] > max_uint)
+  if node[:zookeeperd][:zk_id].nil? || node[:zookeeperd][:zk_id] > max_uint
     node.set[:zookeeperd][:zk_id] = rand(max_uint)
   end
 end
 
-if(node[:zookeeperd][:cluster][:auto_discovery])
+if node[:zookeeperd][:cluster][:auto_discovery]
   include_recipe 'zookeeperd::discovery'
 end
 
-node[:zookeeperd][:server_packages].each do |zkpkg|
+Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
   package zkpkg
 end
 
 execute 'zk_init' do
-  command "/etc/init.d/#{node['zookeeperd']['service_name']} init"
-  action :nothing
-  node[:zookeeperd][:server_packages].each do |zkpkg|
-    subscribes :run, "package[#{zkpkg}]", :immediately
+  command "/usr/bin/zookeeper-server-initialize"
+  user node[:zookeeperd][:user]
+  group node[:zookeeperd][:group]
+  only_if do
+    cloudera &&
+      !::File.directory?(
+        File.join(
+          node[:zookeeperd][:config][:data_dir],
+          node[:zookeeperd][:cloudera][:init_dir_name]
+        )
+      )
   end
-  only_if { node[:zookeeperd][:cloudera_repo] == true }
-end
-
-service 'zookeeper' do
-  service_name node[:zookeeperd][:service_name]
-  action :enable
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
@@ -72,8 +75,10 @@ template '/etc/zookeeper/conf/log4j.properties' do
 end
 
 service 'zookeeper' do
-  action :start
+  service_name node[:zookeeperd][:service_name]
+  action [:enable, :start]
 end
 
-# mark as a zk node
-node.set[:zookeeperd_server] = true
+ruby_block 'mark as a zookeeper node' do
+  block { node.set[:zookeeperd_server] = true }
+end

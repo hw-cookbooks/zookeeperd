@@ -10,11 +10,14 @@ elsif(node.platform_family?('debian'))
   default[:zookeeperd][:client_packages] = %w(zookeeper)
   default[:zookeeperd][:service_name] = 'zookeeper'
   default[:zookeeperd][:cloudera][:uri] = "http://archive.cloudera.com/cdh4/#{node[:platform]}/#{node[:lsb][:codename]}/amd64/cdh"
-  default[:zookeeperd][:cloudera][:key] = "http://archive.cloudera.com/#{node[:platform_family]}/archive.key" 
+  default[:zookeeperd][:cloudera][:key] = "http://archive.cloudera.com/#{node[:platform_family]}/archive.key"
 end
+
+default[:zookeeperd][:cloudera][:init_dir_name] = "version-2"
 
 default[:zookeeperd][:zk_id] = nil
 default[:zookeeperd][:auto_id] = 'hostid'
 default[:zookeeperd][:ipaddress] = node.ipaddress
 default[:zookeeperd][:int_bit_limit] = 32
-
+default[:zookeeperd][:user] = "zookeeper"
+default[:zookeeperd][:group] = "zookeeper"
