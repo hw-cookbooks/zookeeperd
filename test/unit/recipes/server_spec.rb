@@ -100,7 +100,7 @@ describe "zookeeperd::server" do
 
   shared_examples "using runit" do
 
-    before { node.set[:zookeeperd][:service] = "runit" }
+    before { node.set[:zookeeperd][:init] = "runit" }
 
     let(:log_hook) { chef_run.find_resource(:log, "zookeeperd pre-package hook") }
 
