@@ -7,7 +7,7 @@ discover_query += Array(node[:zookeeperd][:cluster][:discovery_query]).flatten.c
 
 # ensure that colons in search query values are escaped
 # but leave first colon intact as query delimeter
-discover_query.map do |i|
+discover_query = discover_query.map do |i|
   item = i.split(":", 2)
   key = item[0]
   value = item[1].gsub(":", '\:')
