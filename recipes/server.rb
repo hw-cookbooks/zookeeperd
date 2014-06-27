@@ -64,10 +64,15 @@ unless(node[:zookeeperd][:zk_id])
   node.save
 end
 
-file '/etc/zookeeper/conf/myid' do
-  content "#{node[:zookeeperd][:zk_id]}\n"
-  mode 0644
-  notifies :restart, 'service[zookeeper]'
+[
+  node[:zookeeperd][:config][:data_dir],
+  '/etc/zookeeper/conf'
+].each do | dir |
+  file ::File.join(dir, 'myid') do
+    content "#{node[:zookeeperd][:zk_id]}\n"
+    mode 0644
+    notifies :restart, 'service[zookeeper]'
+  end
 end
 
 template '/etc/zookeeper/conf/log4j.properties' do
