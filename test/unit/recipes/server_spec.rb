@@ -150,7 +150,7 @@ describe "zookeeperd::server" do
           resource = chef_run.find_resource(:dpkg_autostart, service_name)
 
           expect(resource.action).to eq([:nothing])
-          expect(immediate_notification_on(log_hook, :create, resource)).to be_true
+          expect(immediate_notification_on(log_hook, :create, resource)).to be_truthy
         end
 
         it "enable the runit service with the zookeeper template" do
@@ -187,7 +187,7 @@ describe "zookeeperd::server" do
           expect(resource.action).to eq([:nothing])
           expect(resource.content).to match(regexify_line("exit 0"))
           expect(resource.mode).to eq(0755)
-          expect(immediate_notification_on(log_hook, :create, resource)).to be_true
+          expect(immediate_notification_on(log_hook, :create, resource)).to be_truthy
         end
 
         it "enable the runit service with the cloudera template" do
