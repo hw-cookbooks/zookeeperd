@@ -1,4 +1,4 @@
-defatul[:zookeeperd][:install][:platform_version] = node[:platform_version]
+default[:zookeeperd][:install][:platform_version] = node[:platform_version]
 
 if(node.platform_family?('rhel', 'fedora', 'suse'))
   default[:zookeeperd][:server_packages] = %w(zookeeper-server)
