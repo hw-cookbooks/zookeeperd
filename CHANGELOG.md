@@ -1,3 +1,7 @@
+## v0.2.2
+* Support for overriding zookeeperd.install.platform_version to support Amazon Linux
+* Colons in discovery search queries are now escaped correctly
+
 ## v0.2.0
 * Add tests
 * Include support for runit

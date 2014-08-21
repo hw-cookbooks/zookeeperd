@@ -1,10 +1,12 @@
+default[:zookeeperd][:install][:platform_version] = node[:platform_version]
+
 if(node.platform_family?('rhel', 'fedora', 'suse'))
   default[:zookeeperd][:server_packages] = %w(zookeeper-server)
   default[:zookeeperd][:client_packages] = %w(zookeeper)
   default[:zookeeperd][:service_name] = 'zookeeper-server'
   default[:zookeeperd][:cloudera_repo] = true
-  default[:zookeeperd][:cloudera][:baseurl] = "http://archive.cloudera.com/cdh4/redhat/#{node[:platform_version].to_i}/#{node[:kernel][:machine]}/cdh/4/"
-  default[:zookeeperd][:cloudera][:gpgkey] = "http://archive.cloudera.com/cdh4/redhat/#{node[:platform_version].to_i}/#{node[:kernel][:machine]}/cdh/RPM-GPG-KEY-cloudera"
+  default[:zookeeperd][:cloudera][:baseurl] = "http://archive.cloudera.com/cdh4/redhat/#{node[:zookeeperd][:install][:platform_version].to_i}/#{node[:kernel][:machine]}/cdh/4/"
+  default[:zookeeperd][:cloudera][:gpgkey] = "http://archive.cloudera.com/cdh4/redhat/#{node[:zookeeperd][:install][:platform_version].to_i}/#{node[:kernel][:machine]}/cdh/RPM-GPG-KEY-cloudera"
 elsif(node.platform_family?('debian'))
   default[:zookeeperd][:server_packages] = %w(zookeeperd)
   default[:zookeeperd][:client_packages] = %w(zookeeper)
