@@ -1,6 +1,5 @@
 include_recipe "java"
 
-# Create zookeeper user/group
 group node["zookeeperd"]["group"] do
   action :create
 end
@@ -13,51 +12,49 @@ user node["zookeeperd"]["user"] do
   supports :manage_home => true
 end
 
-# Create limits.d conf to set zookeeper open file limit and max processes
 template "/etc/security/limits.d/#{node["zookeeperd"]["user"]}.conf" do
   source "limits.conf.erb"
   owner node["zookeeperd"]["user"]
   group node["zookeeperd"]["group"]
   mode "0755"
   backup false
-  notifies :restart, "service[zookeeperd]", :delayed
-end
-
-# Configure zookeeper user's bash profile
-template "/home/#{node["zookeeperd"]["user"]}/.bash_profile" do
-  source  "bash_profile.erb"
-  owner node["zookeeperd"]["user"]
-  group node["zookeeperd"]["group"]
-  mode  00755
-  notifies :restart, "service[zookeeperd]", :delayed
+  notifies :restart, "service[zookeeper]", :delayed
 end
 
 download_path = '/tmp'
-download_filename = "zookeeper-#{node[:zookeeperd][:jar][:version]}.tar.gz"
+download_filename = "zookeeper-#{node[:zookeeperd][:jar][:download][:version]}.tar.gz"
 download_file_location = "#{download_path}/#{download_filename}"
-download_remote = "#{node[:zookeeperd][:jar][:download][:uri]}/#{download_filename}"
+download_remote = "#{node[:zookeeperd][:jar][:download][:uri]}/zookeeper-#{node[:zookeeperd][:jar][:download][:version]}/#{download_filename}"
 
-# Download binary zip file
 remote_file download_file_location do
   action :create_if_missing
   source download_remote
-  group node["zookeeper"]["group"]
-  owner node["zookeeper"]["user"]
+  group node["zookeeperd"]["group"]
+  owner node["zookeeperd"]["user"]
   mode 00644
   backup false
 end
 
-# Setup zookeeper's init script
-template "/etc/init.d/zookeeper" do
-  source  "init.erb"
-  group node["zookeeper"]["group"]
-  owner node["zookeeper"]["user"]
-  mode 00755
-  backup false
+execute "Unpack zookeeper from download" do
+  cwd download_path
+  command "tar -xzf #{download_filename}"
+  not_if { ::File.exists?("#{download_path}/zookeeper-#{node[:zookeeperd][:jar][:download][:version]}") }
 end
 
-# Start zookeeper service
-service "zookeeper" do
-  supports :status => true, :restart => true
-  action [ :enable, :start ]
+execute "Install zookeeper files" do
+  cwd download_path
+  command "rsync -az zookeeper-#{node[:zookeeperd][:jar][:download][:version]} #{node[:zookeeperd][:jar][:install_dir]}/"
+  not_if { ::File.exists?("#{node[:zookeeperd][:jar][:install_dir]}/zookeeper-#{node[:zookeeperd][:jar][:download][:version]}") }
+end
+
+link node[:zookeeperd][:jar][:base_dir] do
+ to "#{node[:zookeeperd][:jar][:install_dir]}/zookeeper-#{node[:zookeeperd][:jar][:download][:version]}"
+end
+
+template "/etc/init.d/zookeeper" do
+  source  "init.erb"
+  group node["zookeeperd"]["group"]
+  owner node["zookeeperd"]["user"]
+  mode 00755
+  backup false
 end

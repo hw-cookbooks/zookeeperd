@@ -58,13 +58,17 @@ end
 
 directory '/etc/zookeeper/conf' do
   action :create
-  recusive :true
+  recursive true
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
   source 'zoo.cfg.erb'
   mode 0644
   notifies :restart, 'service[zookeeper]'
+end
+
+directory node[:zookeeperd][:config][:data_dir] do
+  group node[:zookeeperd][:group]
 end
 
 unless(node[:zookeeperd][:zk_id])
@@ -103,12 +107,9 @@ if node[:zookeeperd][:init].to_s == 'runit'
   include_recipe 'zookeeperd::runit'
 end
 
-if by_package
-  ### this until init for tar is set up.
 service 'zookeeper' do
   service_name node[:zookeeperd][:service_name]
   action node[:zookeeperd][:init].to_s == 'runit' ? :start : [:enable, :start]
-end
 end
 
 ruby_block 'mark as a zookeeper node' do

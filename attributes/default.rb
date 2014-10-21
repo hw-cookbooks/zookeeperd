@@ -3,8 +3,8 @@ default[:zookeeperd][:install][:method] = 'package' # allowed: 'package' or 'jar
 
 default[:zookeeperd][:jar][:download][:version] = "3.4.6"
 default[:zookeeperd][:jar][:download][:uri] = "http://archive.apache.org/dist/zookeeper"
-
-default[:zookeeperd][:base_dir] = '/opt/zookeeperd'
+default[:zookeeperd][:jar][:install_dir] = '/opt'
+default[:zookeeperd][:jar][:base_dir] = '/opt/zookeeperd'
 
 if(node.platform_family?('rhel', 'fedora', 'suse'))
   default[:zookeeperd][:server_packages] = %w(zookeeper-server)
