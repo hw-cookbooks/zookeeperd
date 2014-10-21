@@ -1,13 +1,18 @@
 cloudera = node[:zookeeperd][:cloudera_repo]
+by_package = node[:zookeeperd][:install][:method] == 'package'
 
-if cloudera
+if cloudera && by_package
   include_recipe 'java'
   include_recipe 'zookeeperd::cloudera_repo'
 end
 
 log "zookeeperd pre-package hook"
 
-include_recipe 'zookeeperd::client'
+if by_package
+  ### have to check on what part of the client is needed
+  ### jar tar doesn't have zooinspector
+  include_recipe 'zookeeperd::client'
+end
 
 unless node[:zookeeperd][:zk_id]
   factor = node[:zookeeperd][:int_bit_limit]/8
@@ -24,10 +29,17 @@ if node[:zookeeperd][:cluster][:auto_discovery]
   include_recipe 'zookeeperd::discovery'
 end
 
-Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
-  package zkpkg
+case node[:zookeeperd][:install][:method]
+when 'package'
+  Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
+    package zkpkg
+  end
+when 'jar'
+  include_recipe "zookeeperd::apache_jar"
 end
 
+if by_package
+  ### ^^ note to self this might have to go back for all installs
 execute 'zk_init' do
   command "/usr/bin/zookeeper-server-initialize"
   user node[:zookeeperd][:user]
@@ -41,6 +53,12 @@ execute 'zk_init' do
         )
       )
   end
+end
+end
+
+directory '/etc/zookeeper/conf' do
+  action :create
+  recusive :true
 end
 
 template '/etc/zookeeper/conf/zoo.cfg' do
@@ -85,9 +103,12 @@ if node[:zookeeperd][:init].to_s == 'runit'
   include_recipe 'zookeeperd::runit'
 end
 
+if by_package
+  ### this until init for tar is set up.
 service 'zookeeper' do
   service_name node[:zookeeperd][:service_name]
   action node[:zookeeperd][:init].to_s == 'runit' ? :start : [:enable, :start]
+end
 end
 
 ruby_block 'mark as a zookeeper node' do
