@@ -1,4 +1,13 @@
 default[:zookeeperd][:install][:platform_version] = node[:platform_version]
+default[:zookeeperd][:install][:method] = 'package' # allowed: 'package' or 'jar'
+
+default[:zookeeperd][:jar][:download][:version] = "3.4.6"
+default[:zookeeperd][:jar][:download][:uri] = "http://archive.apache.org/dist/zookeeper"
+default[:zookeeperd][:jar][:install_dir] = '/usr/local'
+default[:zookeeperd][:jar][:base_dir] = '/usr/local/zookeeperd'
+default[:zookeeperd][:jar][:log_dir] = '/var/log/zookeeper'
+default[:zookeeperd][:jar][:pid_dir] = '/var/run/zookeeper'
+default[:zookeeperd][:jar][:data_dir] = '/var/lib/zookeeper'
 
 if(node.platform_family?('rhel', 'fedora', 'suse'))
   default[:zookeeperd][:server_packages] = %w(zookeeper-server)
@@ -27,3 +36,7 @@ default[:zookeeperd][:int_bit_limit] = 32
 
 default[:zookeeperd][:user] = "zookeeper"
 default[:zookeeperd][:group] = "zookeeper"
+
+default[:zookeeperd][:open_file_limit] = 32768
+default[:zookeeperd][:max_processes] = 1024
+

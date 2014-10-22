@@ -1,13 +1,18 @@
 cloudera = node[:zookeeperd][:cloudera_repo]
+by_package = node[:zookeeperd][:install][:method] == 'package'
 
-if cloudera
+if cloudera && by_package
   include_recipe 'java'
   include_recipe 'zookeeperd::cloudera_repo'
 end
 
 log "zookeeperd pre-package hook"
 
-include_recipe 'zookeeperd::client'
+if by_package
+  ### have to check on what part of the client is needed
+  ### jar tar doesn't have zooinspector
+  include_recipe 'zookeeperd::client'
+end
 
 unless node[:zookeeperd][:zk_id]
   factor = node[:zookeeperd][:int_bit_limit]/8
@@ -24,8 +29,13 @@ if node[:zookeeperd][:cluster][:auto_discovery]
   include_recipe 'zookeeperd::discovery'
 end
 
-Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
-  package zkpkg
+case node[:zookeeperd][:install][:method]
+when 'package'
+  Array(node[:zookeeperd][:server_packages]).each do |zkpkg|
+    package zkpkg
+  end
+when 'jar'
+  include_recipe "zookeeperd::apache_jar"
 end
 
 execute 'zk_init' do
@@ -43,10 +53,19 @@ execute 'zk_init' do
   end
 end
 
+directory '/etc/zookeeper/conf' do
+  action :create
+  recursive true
+end
+
 template '/etc/zookeeper/conf/zoo.cfg' do
   source 'zoo.cfg.erb'
   mode 0644
   notifies :restart, 'service[zookeeper]'
+end
+
+directory node[:zookeeperd][:config][:data_dir] do
+  group node[:zookeeperd][:group]
 end
 
 unless(node[:zookeeperd][:zk_id])
@@ -70,6 +89,7 @@ end
 ].each do | dir |
   file ::File.join(dir, 'myid') do
     content "#{node[:zookeeperd][:zk_id]}\n"
+    owner node[:zookeeperd][:user]
     mode 0644
     notifies :restart, 'service[zookeeper]'
   end

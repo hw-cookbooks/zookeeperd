@@ -49,3 +49,13 @@ suites:
       zookeeperd:
         cloudera_repo: true
         service: runit
+  - name: server-jar
+    run_list:
+      - recipe[zookeeperd::server]
+    attributes:
+      zookeeperd:
+        install:
+          method: 'jar'
+        jar:
+          download:
+            version: '3.3.6'
