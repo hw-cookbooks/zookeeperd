@@ -38,8 +38,6 @@ when 'jar'
   include_recipe "zookeeperd::apache_jar"
 end
 
-if by_package
-  ### ^^ note to self this might have to go back for all installs
 execute 'zk_init' do
   command "/usr/bin/zookeeper-server-initialize"
   user node[:zookeeperd][:user]
@@ -53,7 +51,6 @@ execute 'zk_init' do
         )
       )
   end
-end
 end
 
 directory '/etc/zookeeper/conf' do
@@ -92,6 +89,7 @@ end
 ].each do | dir |
   file ::File.join(dir, 'myid') do
     content "#{node[:zookeeperd][:zk_id]}\n"
+    owner node[:zookeeperd][:user]
     mode 0644
     notifies :restart, 'service[zookeeper]'
   end
