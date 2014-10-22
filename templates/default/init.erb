@@ -12,4 +12,4 @@
 # description: Zookeeper
 # processname: zookeeper
 ### END INIT INFO
-su - <%= node[:zookeeperd][:user] %> <%= node[:zookeeperd][:jar][:base_dir] %>/bin/zkServer.sh $1
+su - <%= node[:zookeeperd][:user] %> /usr/bin/zookeeper-server $1
