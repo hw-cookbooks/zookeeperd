@@ -1,3 +1,6 @@
+## v0.2.4
+* Support for installing jar from Apache Archive tar.gz files
+
 ## v0.2.2
 * Support for overriding zookeeperd.install.platform_version to support Amazon Linux
 * Colons in discovery search queries are now escaped correctly
