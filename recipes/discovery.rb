@@ -24,13 +24,16 @@ zk_nodes = discovery_all(
 )
 
 zk_hash = {}
+zk_discovery = {}
 zk_nodes.push(node) unless node[:zookeeperd][:zk_id].to_s.strip.empty?
+
 
 zk_nodes.each do |znode|
   zinfo = [znode[:zookeeperd][:ipaddress]]
   zinfo << znode[:zookeeperd][:cluster][:follower_port]
   zinfo << znode[:zookeeperd][:cluster][:election_port]
   zk_hash["server.#{znode[:zookeeperd][:zk_id]}"] = zinfo.join(':')
+  zk_discovery["server.#{znode[:zookeeperd][:zk_id]}"] = znode[:zookeeperd][:ipaddress]
 end
 
 # ensure this node is in there (may not be on first run)
@@ -40,8 +43,11 @@ if(node[:zookeeperd][:zk_id])
     zinfo << node[:zookeeperd][:cluster][:follower_port]
     zinfo << node[:zookeeperd][:cluster][:election_port]
     zk_hash["server.#{node[:zookeeperd][:zk_id]}"] = zinfo.join(':')
+    zk_discovery["server.#{node[:zookeeperd][:zk_id]}"] = node[:zookeeperd][:ipaddress]
   end
 end
+
+node.set[:zookeeperd][:discovery] = zk_discovery
 
 current_set = node[:zookeeperd][:config].map do |k,v|
   k if k.start_with?('server.')
