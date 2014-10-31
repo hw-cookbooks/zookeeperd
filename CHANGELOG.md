@@ -1,3 +1,6 @@
+## v0.2.6
+* Set node attribute as hash with node ip addresses found in discovery
+
 ## v0.2.4
 * Support for installing jar from Apache Archive tar.gz files
 
