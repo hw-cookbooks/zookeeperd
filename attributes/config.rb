@@ -7,3 +7,5 @@ default[:zookeeperd][:config][:server] = []
 default[:zookeeperd][:config][:pre_alloc_size] = 65536
 default[:zookeeperd][:config][:snap_count] = 10000
 default[:zookeeperd][:config][:leader_serves] = true
+
+default[:zookeeperd][:discovery] = {}
