@@ -49,6 +49,10 @@ end
 
 node.set[:zookeeperd][:discovery] = zk_discovery
 
+log "ZOOKEEPER DISCOVERY: "
+log discover_query.join(' AND ')
+log zk_discovery
+
 current_set = node[:zookeeperd][:config].map do |k,v|
   k if k.start_with?('server.')
 end
