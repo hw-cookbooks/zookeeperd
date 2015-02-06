@@ -1,11 +1,15 @@
 ---
 driver:
   name: vagrant
+  synced_folders:
+    - ["output", "/tmp/output"]
   customize:
     memory: 1048
 
 provisioner:
   name: chef_solo
+  run_list:
+    - recipe[teapot-handler]
   attributes:
     zookeeperd:
       cluster:
