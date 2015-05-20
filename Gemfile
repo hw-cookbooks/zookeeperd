@@ -1,13 +1,9 @@
 source "https://rubygems.org"
 
-gem "chefspec"
+gem "chefspec", '~> 4.2'
 gem "emeril"
 gem "foodcritic", "~> 3.0"
 gem "librarian-chef"
-
-group :development do
-  gem "guard-rspec"
-end
 
 group :integration do
   gem "test-kitchen"
