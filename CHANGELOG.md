@@ -1,3 +1,6 @@
+## Unreleased
+* Manage JVM_FLAGS
+
 ## v0.2.6
 * Set node attribute as hash with node ip addresses found in discovery
 
