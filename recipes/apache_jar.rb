@@ -75,6 +75,7 @@ template "/usr/bin/zookeeper-server" do
   source "zookeeper-server.erb"
   variables :jvm_flags => node[:zookeeperd][:jvm_flags].map { |k,v| "-D#{k}=#{v}" }.join(' ')
   mode 00755
+  notifies :restart, 'service[zookeeper]'
 end
 
 template "#{node[:zookeeperd][:jar][:base_dir]}/bin/zkServer-initialize.sh" do
