@@ -2,10 +2,10 @@
 driver:
   name: vagrant
   customize:
-    memory: 1048
+    memory: 256
 
 provisioner:
-  name: chef_solo
+  name: chef_zero
   attributes:
     zookeeperd:
       cluster:
@@ -17,38 +17,28 @@ platforms:
   - name: ubuntu-12.04
     run_list:
       - recipe[apt]
+  - name: ubuntu-14.04
+    run_list:
+      - recipe[apt]
   - name: centos-6.5
+  - name: centos-7.1
 
 suites:
   - name: client
     run_list:
       - recipe[zookeeperd]
   - name: server
+    excludes:
+      - centos-6.5
+      - centos-7.1
     run_list:
       - recipe[zookeeperd::server]
+    attributes:
+      zookeeperd:
+        cloudera_repo: false
   - name: server-cloudera
-    includes:
-      - ubuntu-12.04
     run_list:
       - recipe[zookeeperd::server]
-    attributes:
-      zookeeperd:
-        cloudera_repo: true
-  - name: server-runit
-    run_list:
-      - recipe[zookeeperd::server]
-    attributes:
-      zookeeperd:
-        service: runit
-  - name: server-cloudera-runit
-    includes:
-      - ubuntu-12.04
-    run_list:
-      - recipe[zookeeperd::server]
-    attributes:
-      zookeeperd:
-        cloudera_repo: true
-        service: runit
   - name: server-jar
     run_list:
       - recipe[zookeeperd::server]
@@ -56,6 +46,3 @@ suites:
       zookeeperd:
         install:
           method: 'jar'
-        jar:
-          download:
-            version: '3.3.6'
