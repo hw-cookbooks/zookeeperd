@@ -6,10 +6,10 @@ module ChefZookeeperd
       case value
       when Array
         count = 0
-        res = value.map{ |v|
+        res = value.map do |v|
           count += 1
           config_format("#{k}.#{count}", v)
-        }.join("\n")
+        end.join("\n")
       else
         res << value.to_s
       end
@@ -19,10 +19,10 @@ module ChefZookeeperd
     def format_key(k)
       parts = k.split('_')
       count = 0
-      parts.map{|part|
+      parts.map do|part|
         count += 1
         count > 1 ? part.capitalize : part
-      }.join
+      end.join
     end
   end
 end

@@ -26,7 +26,7 @@ ZOOBIN="${BASH_SOURCE-$0}"
 ZOOBIN=`dirname ${ZOOBIN}`
 ZOOBINDIR=`cd ${ZOOBIN}; pwd`
 
-ZOOKEEPER_HOME=${ZOOKEEPER_CONF:-<%= node[:zookeeperd][:jar][:base_dir] %>}
+ZOOKEEPER_HOME=${ZOOKEEPER_CONF:-<%= node['zookeeperd']['jar']['base_dir'] %>}
 ZOOKEEPER_CONF=${ZOOKEEPER_CONF:-/etc/zookeeper/conf}
 ZOOCFG=${ZOOCFGDIR:-$ZOOKEEPER_CONF}
 CLASSPATH=$CLASSPATH:$ZOOKEEPER_CONF:$ZOOKEEPER_HOME/*:$ZOOKEEPER_HOME/lib/*
@@ -66,7 +66,7 @@ initialize() {
         exit 1
     fi
 
-    ZOO_DATADIR=<%= node[:zookeeperd][:jar][:data_dir] %>
+    ZOO_DATADIR=<%= node['zookeeperd']['jar']['data_dir'] %>
     ZOO_DATALOGDIR=$(grep "^[[:space:]]*dataLogDir" "$ZOOCFG" | sed -e 's/.*=//')
 
     if [ -z "$ZOO_DATADIR" ]; then
