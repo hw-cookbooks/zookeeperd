@@ -40,3 +40,6 @@ default[:zookeeperd][:group] = "zookeeper"
 default[:zookeeperd][:open_file_limit] = 32768
 default[:zookeeperd][:max_processes] = 1024
 
+default[:zookeeperd][:jvm_flags] = {
+  'zookeeper.log.threshold' => 'INFO'
+  }
