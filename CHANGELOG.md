@@ -1,4 +1,4 @@
-## Unreleased
+## v0.2.8
 * Manage JVM_FLAGS
 
 ## v0.2.6
