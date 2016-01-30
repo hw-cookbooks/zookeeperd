@@ -4,6 +4,7 @@ license 'Apache 2.0'
 
 name 'zookeeperd'
 version '0.2.8'
+description 'Installs and configures Apache Zookeeper'
 
 depends 'apt'
 depends 'discovery', '>= 0.2.0'
